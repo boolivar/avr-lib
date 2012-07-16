@@ -23,11 +23,11 @@ void set_timer0_wg_mode(timer0_wg_mode_enum wgm)
 		break;
 
 	case T0_WG_PWM_PHASE_CORRECT:
-		bit_set(TCCR0, WGM00);
+		bit_set(tccr0, WGM00);
 		break;
 
 	case T0_WG_CTC:
-		bit_set(TCCR0, WGM01);
+		bit_set(tccr0, WGM01);
 		break;
 
 	case T0_WG_FAST_PWM:
@@ -44,20 +44,20 @@ void set_timer0_wg_mode(timer0_wg_mode_enum wgm)
 void set_timer0_clock_source(timer0_clock_select_enum clock_select)
 {
 	unsigned char tmp;
-	tmp = TCCR0 & 0xf8;
-	TCCR0 = tmp | clock_select;
+	tmp = TCCR0 & ~(_BV(CS02) | _BV(CS01) | _BV(CS00));
+	TCCR0 = tmp | (clock_select << CS00);
 }
 
 void set_timer0_OC0_mode(timer0_compare_output_mode_enum mode)
 {
 	unsigned char tmp;
-	tmp = TCCR0 & 0xe7;
-	TCCR0 = tmp | (mode << 4);
+	tmp = TCCR0 & ~(_BV(COM01) | _BV(COM00));//0xe7;
+	TCCR0 = tmp | (mode << COM00);
 }
 
 void timer0_int_ena(timer0_int_enum timer0_int)
 {
-	register uint8_t tifr = TIFR;
+	register uint8_t tifr = 0;
 	register uint8_t timsk = TIMSK;
 	
 	switch (timer0_int)
@@ -73,7 +73,7 @@ void timer0_int_ena(timer0_int_enum timer0_int)
 		break;
 
 	case TIMER0_ALL_INTERRUPTS:
-		tifr |= (_BV(TOV0) | _BV(OCF0));
+		tifr = (_BV(TOV0) | _BV(OCF0));
 		timsk |= (_BV(TOIE0) | _BV(OCIE0));
 		break;
 
@@ -236,8 +236,8 @@ void set_timer1_OC1B_mode(timer1_compare_output_mode_enum mode)
 	switch (mode)
 	{
 	case T1_NORMAL_PORT_OPERATION:
-	
 		break;
+
 	case T1_TOGGLE:
 		TCCR1A |= _BV(COM1B0);
 		break;
@@ -257,54 +257,28 @@ void set_timer1_OC1B_mode(timer1_compare_output_mode_enum mode)
 
 void timer1_int_ena(timer1_int_enum timer1_int)
 {
-	register uint8_t tifr = TIFR;
+	register uint8_t tifr = 0;
 	register uint8_t timsk = TIMSK;
 	
 	if (timer1_int & TIMER1_OVERFLOW_INTERRUPT) {
-		set_bit(tifr, TOV1);
-		set_bit(timsk, TOIE1);
+		bit_set(tifr, TOV1);
+		bit_set(timsk, TOIE1);
 	}
 	
 	if (timer1_int & TIMER1_OUTPUT_COMPARE_A_MATCH_INTERRUPT) {
-		set_bit(tifr, OCF1A);
-		set_bit(timsk, OCIE1A);
+		bit_set(tifr, OCF1A);
+		bit_set(timsk, OCIE1A);
 	}
 	
 	if (timer1_int & TIMER1_OUTPUT_COMPARE_B_MATCH_INTERRUPT) {
-		set_bit(tifr, OCF1B);
-		set_bit(timsk, OCIE1B);
+		bit_set(tifr, OCF1B);
+		bit_set(timsk, OCIE1B);
 	}
 	
 	if (timer1_int & TIMER1_INPUT_CAPTURE_INTERRUPT) {
-		set_bit(tifr, ICF1);
-		set_bit(timsk, TICIE1);
+		bit_set(tifr, ICF1);
+		bit_set(timsk, TICIE1);
 	}
-	
-/*
-	TIFR1 |= 1 << TOV1; //clear pending ints
-
-	switch (timer1_int)
-	{
-	case TIMER1_INPUT_CAPTURE_INTERRUPT:
-		//TIMSK1 |= 1 << ICIE1;
-		break;
-		
-	case TIMER1_OUTPUT_COMPARE_A_MATCH_INTERRUPT:
-		//TIMSK1 |= 1 << OCIE1A;
-		break;
-		
-	case TIMER1_OUTPUT_COMPARE_B_MATCH_INTERRUPT:
-		//TIMSK1 |= 1 << OCIE1B;
-		break;
-		
-	case TIMER1_OVERFLOW_INTERRUPT:
-		bit_set(TIMSK, TOIE1);
-		break;
-		
-	default:
-		break;
-	}
-*/
 	
 	TIFR = tifr;
 	TIMSK = timsk;
@@ -315,46 +289,22 @@ void timer1_int_dis(timer1_int_enum timer1_int)
 	register uint8_t timsk = TIMSK;
 	
 	if (timer1_int & TIMER1_OVERFLOW_INTERRUPT) {
-		clr_bit(timsk, TOIE1);
+		bit_clr(timsk, TOIE1);
 	}
 	
 	if (timer1_int & TIMER1_OUTPUT_COMPARE_A_MATCH_INTERRUPT) {
-		clr_bit(timsk, OCIE1A);
+		bit_clr(timsk, OCIE1A);
 	}
 	
 	if (timer1_int & TIMER1_OUTPUT_COMPARE_B_MATCH_INTERRUPT) {
-		clr_bit(timsk, OCIE1B);
+		bit_clr(timsk, OCIE1B);
 	}
 	
 	if (timer1_int & TIMER1_INPUT_CAPTURE_INTERRUPT) {
-		clr_bit(timsk, TICIE1);
+		bit_clr(timsk, TICIE1);
 	}
 	
 	TIMSK = timsk;
-/*
-	switch (timer1_int)
-	{
-	case TIMER1_INPUT_CAPTURE_INTERRUPT:
-		//TIMSK1 &= ~(1 << ICIE1);
-		break;
-	case TIMER1_OUTPUT_COMPARE_A_MATCH_INTERRUPT:
-		//TIMSK1 &= ~(1 << OCIE1A);
-		break;
-	case TIMER1_OUTPUT_COMPARE_B_MATCH_INTERRUPT:
-		//TIMSK1 &= ~(1 << OCIE1B);
-		break;
-	case TIMER1_OVERFLOW_INTERRUPT:
-		bit_clr(TIMSK, TOIE1);
-		break;
-	case TIMER1_ALL_INTERRUPTS:
-		//TIMSK1
-		//		&= ~((1 << ICIE1) | (1 << OCIE1A) | (1 << OCIE1B) | (1
-		//				<< TOIE1));
-		break;
-	default:
-		break;
-	}
-*/
 }
 
 void set_timer2_clock_source(timer2_clock_select_enum clock_select)
@@ -420,39 +370,21 @@ void set_timer2_OC_mode(timer2_compare_output_mode_enum mode)
 
 void timer2_int_ena(timer2_int_enum timer2_int)
 {
-	register uint8_t tifr = TIFR;
+	register uint8_t tifr = 0;
 	register uint8_t timsk = TIMSK;
 	
 	if (timer2_int & TIMER2_OVERFLOW_INTERRUPT) {
-		set_bit(tifr, TOV2);
-		set_bit(timsk, TOIE2);
+		bit_set(tifr, TOV2);
+		bit_set(timsk, TOIE2);
 	}
 	
-	if (timer2_int & TIMER2_OUTPUT_COMPARE_INTERRUPT) {
-		set_bit(tifr, OCF2);
-		set_bit(timsk, OCIE2);
+	if (timer2_int & TIMER2_OUTPUT_COMPARE_MATCH_INTERRUPT) {
+		bit_set(tifr, OCF2);
+		bit_set(timsk, OCIE2);
 	}
 	
 	TIFR = tifr;
 	TIMSK = timsk;
-/*
-	switch (timer2_int)
-	{
-	case TIMER2_OUTPUT_COMPARE_MATCH_INTERRUPT:
-		//TIFR2 |= _BV(OCF2A); //clear pending ints
-		//TIMSK2 |= _BV(OCIE2A);
-		bit_set(TIMSK, OCIE2); 
-		break;
-		
-	case TIMER2_OVERFLOW_INTERRUPT:
-		//TIFR2 |= _BV(TOV2); //clear pending ints
-		//TIMSK2 |= _BV(TOIE2);
-		break;
-		
-	default:
-		break;
-	}
-*/
 }
 
 void timer2_int_dis(timer2_int_enum timer2_int)
@@ -460,28 +392,12 @@ void timer2_int_dis(timer2_int_enum timer2_int)
 	register uint8_t timsk = TIMSK;
 	
 	if (timer2_int & TIMER2_OVERFLOW_INTERRUPT) {
-		clr_bit(timsk, TOIE2);
+		bit_clr(timsk, TOIE2);
 	}
 	
-	if (timer2_int & TIMER2_OUTPUT_COMPARE_INTERRUPT) {
-		clr_bit(timsk, OCIE2);
+	if (timer2_int & TIMER2_OUTPUT_COMPARE_MATCH_INTERRUPT) {
+		bit_clr(timsk, OCIE2);
 	}
 	
 	TIMSK = timsk;
-/*
-	switch (timer2_int)
-	{
-	case TIMER2_OUTPUT_COMPARE_MATCH_INTERRUPT:
-		TIMSK2 &= ~_BV(OCIE2A);
-		break;
-	case TIMER2_OVERFLOW_INTERRUPT:
-		TIMSK2 &= ~_BV(TOIE2);
-		break;
-	case TIMER2_ALL_INTERRUPTS:
-		TIMSK2 &= ~(_BV(OCF2A) | _BV(TOIE2));
-		break;
-	default:
-		break;
-	}//switch
 }
-*/

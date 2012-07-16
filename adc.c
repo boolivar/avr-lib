@@ -34,16 +34,14 @@ unsigned short adc_get_value(adc_channel_enum channel)
 	unsigned short value;
 	register unsigned char  tmp;
 
-	for (i=0;i<8;++i) {
-		tmp = ADMUX & 0xf0;     // выбор канала
-		ADMUX = tmp | channel;  //
+	tmp = ADMUX & 0xf0;     // выбор канала
+	ADMUX = tmp | channel;  //
 
-		bit_set(ADCSRA, ADSC);
-		loop_until_bit_is_clear(ADCSRA, ADSC);
+	bit_set(ADCSRA, ADSC);
+	loop_until_bit_is_clear(ADCSRA, ADSC);
 
-		value = ADCL;
-		value |= (ADCH << 8);
-	}
+	value = ADCL;
+	value |= (ADCH << 8);
 
 	return value;
 }

@@ -123,9 +123,8 @@ typedef enum
 
 typedef enum
 {
-	TIMER2_OUTPUT_COMPARE_MATCH_INTERRUPT,
-	TIMER2_OVERFLOW_INTERRUPT,
-	TIMER2_ALL_INTERRUPTS
+	TIMER2_OVERFLOW_INTERRUPT = 0x01,
+	TIMER2_OUTPUT_COMPARE_MATCH_INTERRUPT = 0x02,
 } timer2_int_enum;
 
 void set_timer0_wg_mode(timer0_wg_mode_enum wgm);

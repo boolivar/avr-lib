@@ -16,9 +16,9 @@ void extint_set_int1_sense_control(input_sense_enum input_sense);
 
 void extint_int_ena(extint_enum extint_mask)
 {
-	register uint8_t gifr = GIFR;
+	register uint8_t gifr = 0;
 	register uint8_t gicr = GICR;
-	
+
 #if 0
 	gifr |= (extint_mask << INTF2);
 	gicr |= (extint_mask << INT2);
@@ -38,22 +38,7 @@ void extint_int_ena(extint_enum extint_mask)
 		bit_set(gicr, INT2);
 	}
 #endif
-	/*
-	switch(extint_mask)
-	{
-		case INT0_ENA:
-			bit_set(GIMSK, INT0);
-		break;
-		//
-		case INT1_ENA:
-			bit_set(GIMSK, INT1);
-		break;
-		//
-		case INT2_ENA:
-			bit_set(GIMSK, INT2);
-		break;
-	}
-	*/
+
 	GIFR = gifr;
 	GICR = gicr;
 }
@@ -77,22 +62,7 @@ void extint_int_dis(extint_enum extint_mask)
 		bit_clr(gicr, INT2);
 	}
 #endif
-/*
-	switch(extint_mask)
-	{
-		case INT0_ENA:
-			bit_clr(GIMSK, INT0);
-		break;
-		
-		case INT1_ENA:
-			bit_clr(GIMSK, INT1);
-		break;
-		
-		case INT2_ENA:
-			bit_clr(GIMSK, INT2);
-		break;
-	}
-*/
+
 	GICR = gicr;
 }
 
@@ -126,7 +96,7 @@ void extint_set_int0_sense_control(input_sense_enum input_sense)
 		break;
 	}
 	
-	MCUSCR = mcucr;
+	MCUCSR = mcucr;
 }
 
 void extint_set_int1_sense_control(input_sense_enum input_sense)
