@@ -96,7 +96,7 @@ void extint_set_int0_sense_control(input_sense_enum input_sense)
 		break;
 	}
 	
-	MCUCSR = mcucr;
+	MCUCR = mcucr;
 }
 
 void extint_set_int1_sense_control(input_sense_enum input_sense)
@@ -129,5 +129,5 @@ void extint_set_int1_sense_control(input_sense_enum input_sense)
 		break;
 	}
 	
-	MCUCSR = mcucr;
+	MCUCR = mcucr;
 }
