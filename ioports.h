@@ -2,6 +2,7 @@
 #define IOPORTS_H_
 
 #include <avr/io.h>
+#include <stdbool.h>
 
 #define IO_STRUCT(port, pin) {&PORT##port, &DDR##port, &PIN##port, _BV(pin)}
 

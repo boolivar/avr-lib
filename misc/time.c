@@ -1,6 +1,8 @@
 
 #include "time.h"
 
+#include <util/atomic.h>
+
 static timer_t* timer_chain = 0;
 
 void time_init(void);

@@ -40,9 +40,9 @@ void gpio_set_state(const io_pin_struct pins[], uint8_t size, uint8_t state_mask
 		pin_mask = pins[i].pin_mask;
 
 		if(state_mask & mask) {
-			*pins[i].port_ptr |= port_mask;
+			*pins[i].port_ptr |= pin_mask;
 		} else {
-			*pins[i].port_ptr &= ~port_mask;
+			*pins[i].port_ptr &= ~pin_mask;
 		}
 		
 		mask <<= 1;
