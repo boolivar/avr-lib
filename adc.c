@@ -26,15 +26,16 @@ void adc_interrupt_disable(void)
 }
 
 /*
- *  Функция ждет окончания цикла АЦП и
- *  возвращает полученное значение.
+ *  пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅ
+ *  пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
  */
-unsigned short adc_get_value(adc_channel_enum channel)
+uint16_t adc_get_value(adc_channel_enum channel)
 {
+#if 0
 	unsigned short value;
 	register unsigned char  tmp;
 
-	tmp = ADMUX & 0xf0;     // выбор канала
+	tmp = ADMUX & 0xf0;     // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	ADMUX = tmp | channel;  //
 
 	bit_set(ADCSRA, ADSC);
@@ -44,17 +45,38 @@ unsigned short adc_get_value(adc_channel_enum channel)
 	value |= (ADCH << 8);
 
 	return value;
+#endif
+	adc_start_conversion(channel);
+	while (!adc_is_conversion_complete())
+		;
+	return adc_get_conversion_result();
+}
+
+void adc_start_conversion(adc_channel_enum channel) {
+	register unsigned char  tmp;
+
+	tmp = ADMUX & 0xf0;
+	ADMUX = tmp | channel;
+
+	bit_set(ADCSRA, ADSC);
+}
+
+uint16_t adc_get_conversion_result() {
+	uint16_t value;
+	value = ADCL;
+	value |= (ADCH << 8);
+	return value;
 }
 
 /*
- *  Функция запускает цикл АЦП для
- *  работы на механизме прерываний.
+ *  пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ
+ *  пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
  */
 void adc_start_interrupted_conversion(adc_channel_enum channel)
 {
 	register unsigned char  tmp;
 
-	tmp = ADMUX & 0xf0;     // выбор канала
+	tmp = ADMUX & 0xf0;     // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	ADMUX = tmp | channel;  //
 
 	bit_set(ADCSRA, ADSC);

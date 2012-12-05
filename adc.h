@@ -48,10 +48,14 @@ typedef enum
 	VSS     = 15,
 } adc_channel_enum;
 
+#define adc_is_conversion_complete() ((ADCSRA & _BV(ADSC)) == 0)
+
 extern void adc_init(adc_voltage_reference_enum vRef,
 		             adc_result_adjust_enum      adj,
 		             adc_prescaler_enum          div);
-extern unsigned short adc_get_value(adc_channel_enum channel);
+void adc_start_conversion(adc_channel_enum channel);
+extern uint16_t adc_get_conversion_result(void);
+extern uint16_t adc_get_value(adc_channel_enum channel);
 extern void adc_start_interrupted_conversion(adc_channel_enum channel);
 
 #endif /* ADC_H_ */
