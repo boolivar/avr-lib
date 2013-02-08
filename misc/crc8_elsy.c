@@ -61,7 +61,7 @@ uint8_t calc_crc(const void *data, uint8_t len) {
 
 	crc = 0;
 	for (;len > 0; --len) {
-		crc = update_crc(*(uint8_t*)data++, crc)
+		crc = update_crc(*(uint8_t*)data++, crc);
 	}
 	return crc;
 }

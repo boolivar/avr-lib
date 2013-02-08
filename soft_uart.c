@@ -6,36 +6,43 @@
 #include "global.h"
 #include "fifo.h"
 #include "async.h"
+#include "timer8.h"
 
-static uint8_t 				bits_left_in_rx;
-static uint8_t 				bits_left_out_tx;
+static uint8_t bits_left_in_rx;
+static uint8_t bits_left_out_tx;
 
-static uint8_t	            internal_rx_buffer;
-static uint16_t				internal_tx_buffer;
+static uint8_t internal_rx_buffer;
+static uint16_t internal_tx_buffer;
 
-void SUART_Init(void)
+static suart_rx_handler_t rx_handler;
+
+void SUART_Init(suart_rx_handler_t handler);
+void SUART_PutChar(uint8_t ch);
+
+void SUART_Init(suart_rx_handler_t handler)
 {
+	rx_handler = handler;
+
     RX_DDRX &= ~_BV(RX_PIN);	
-    RX_PORTX |= (1<<RX_PIN);	//вкл pull-up резистор
+    RX_PORTX |= _BV(RX_PIN);
   
     TX_DDRX |= _BV(TX_PIN);		
 	set_tx_pin_high();			
-        
+
 	DISABLE_TIMER2_INTERRUPT( );
-	TCCR2|= _BV(WGM21);     //CTC mode
- 	TCCR2|= _BV(CS21);			//прескалер таймера=8 
-	
-	MCUCR |= _BV(ISC01);		//задний фронт
-	ENABLE_EXTERNAL0_INTERRUPT( );
-	
-	TCCR1B|= _BV(WGM12);	//CTC 
-	TCCR1B|= _BV(CS11);		//прескалер=8
-	
-	OCR1AH= 0;
-	OCR1AL= TICKS2WAITONE;
+ 	set_timer2_wg_mode(T2_WG_CTC);
+	set_timer2_clock_source(T2S_DIV8);
+
+	EXTINT_SET_INT_SENSE_CONTOL(IS_FALLING_EDGE);
+	ENABLE_EXTERNAL_INTERRUPT();
+
+	set_timer1_wg_mode(CTC_OCR1A);
+	set_timer1_clock_source(T1S_DIV8);
+	OCR1AH = 0;
+	OCR1AL = TICKS2WAITONE;
 }
 
-ISR(INT0_vect)
+ISR(EXTINT_VECTOR)
 {
 	SFIOR |= _BV(PSR2);
 	TCNT2 = INTERRUPT_EXEC_CYCL;
@@ -45,7 +52,7 @@ ISR(INT0_vect)
 
 	bits_left_in_rx = 0;
 	internal_rx_buffer = 0;
-	DISABLE_EXTERNAL0_INTERRUPT( );
+	DISABLE_EXTERNAL_INTERRUPT();
 }
 
 ISR(TIMER2_COMP_vect)
@@ -59,12 +66,10 @@ ISR(TIMER2_COMP_vect)
     if(++bits_left_in_rx < SUART_BITS) {
     	internal_rx_buffer >>= 1;
     }else {
-    	DISABLE_TIMER2_INTERRUPT( );
-		CLEAR_EXTERNAL0_INTERRUPT( );
-		ENABLE_EXTERNAL0_INTERRUPT( );
-		if (q_space(&internal_rx_fifo)) {
-			q_put(&internal_rx_fifo, internal_rx_buffer);
-		}
+    	DISABLE_TIMER2_INTERRUPT();
+		CLEAR_EXTERNAL_INTERRUPT();
+		ENABLE_EXTERNAL_INTERRUPT();
+		rx_handler(internal_rx_buffer);
     }
 }
 
