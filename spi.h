@@ -56,7 +56,6 @@ extern void spi_init(spi_mode_enum          spi_mode,
 		             spi_sampling_mode_enum sampling_mode,
 		             spi_clock_rate_enum    clock_rate);
 extern unsigned char spi_write_byte (unsigned char byte);
-extern void spi_write_interrupted (unsigned char byte);
 extern void spi_write_sequence (const unsigned char *bytes, unsigned char length);
 extern unsigned char spi_write_byte (unsigned char byte);
 

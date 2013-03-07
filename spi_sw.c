@@ -1,12 +1,12 @@
 /*
- * spi.c
+ * spi_sw.c
  *
  *  Created on: 01.03.2012
  *      Author: krichevskiy
  */
 
 
-#include "spi.h"
+#include "spi_sw.h"
 
 #include <avr/io.h>
 #include <util/delay.h>
