@@ -47,18 +47,14 @@ void timeout_reset(timeout_t* timeout, timeout_counter_t time) {
 void timeout_tick() {
 	timeout_t* timeout;
 
-	while (head && head->time) {
-		if (--head->time == 0) {
-			head = head->next;
-		}
+	while (head && (--head->time == 0)) {
+		head = head->next;
 	}
 
 	if (head) {
 		timeout = head;
 		while (timeout->next) {
-			if (timeout->next->time > 0) {
-				--timeout->next->time;
-			}else {
+			if (--timeout->next->time == 0) {
 				timeout->next = timeout->next->next;
 			}
 			timeout = timeout->next;
