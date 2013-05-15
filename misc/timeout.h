@@ -11,7 +11,7 @@
 #include <inttypes.h>
 #include <stdbool.h>
 
-typedef uint8_t timeout_counter_t;
+typedef uint16_t timeout_counter_t;
 
 struct timeout_struct;
 
@@ -21,6 +21,10 @@ struct timeout_struct {
 };
 
 typedef struct timeout_struct timeout_t;
+
+static inline bool timeout_is_elapsed(const timeout_t* timeout) {
+	return (timeout->time == 0);
+}
 
 extern void timeout_init(timeout_t* timeout);
 extern void timeout_reset(timeout_t* timeout, timeout_counter_t time);
