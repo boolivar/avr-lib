@@ -9,10 +9,10 @@
 
 #include "moving_average.h"
 
-void moving_average_filter_init(moving_average_t* filter, filter_value_t* data, window_size_t size);
-filter_value_t moving_average_filter_out(moving_average_t* filter, filter_value_t in);
+void moving_average_filter_init(moving_average_t* filter, moving_average_value_t* data, moving_average_window_size_t size);
+moving_average_value_t moving_average_filter_out(moving_average_t* filter, moving_average_value_t in);
 
-void moving_average_filter_init(moving_average_t* filter, filter_value_t* data, window_size_t size) {
+void moving_average_filter_init(moving_average_t* filter, moving_average_value_t* data, moving_average_window_size_t size) {
 	memset(data, 0, size);
 	filter->window = data;
 	filter->size = size;
@@ -20,7 +20,7 @@ void moving_average_filter_init(moving_average_t* filter, filter_value_t* data, 
 	filter->acc = 0;
 }
 
-filter_value_t moving_average_filter_out(moving_average_t* filter, filter_value_t in) {
+moving_average_value_t moving_average_filter_out(moving_average_t* filter, moving_average_value_t in) {
 	filter->acc -= filter->window[filter->pos];
 	filter->acc += in;
 
