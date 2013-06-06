@@ -77,5 +77,5 @@ void gpio_clear(const io_pin_struct *pin) {
 }
 
 uint8_t gpio_is_set(const io_pin_struct *pin) {
-	return (*pin->port_ptr & pin->pin_mask);
+	return (*pin->pin_ptr & pin->pin_mask);
 }
