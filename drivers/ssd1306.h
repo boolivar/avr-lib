@@ -1,9 +1,11 @@
 #ifndef SSD1306_H
 #define SSD1306_H
 
+#include "i2c.h"
+
 typedef enum {
-	SA0_LOW = 0b01111000,
-	SA0_HIGH = 0b01111010,
+	SA0_LOW = 0b0111100,
+	SA0_HIGH = 0b0111101,
 } ssd1306_addr_t;
 
 typedef enum {
@@ -26,5 +28,40 @@ typedef enum {
 	SSD1306_DISPLAY_CONTRAST = 0x81,
 	SSD1306_VCOM_DESELECT_LEVEL = 0xDB,
 } ssd1306_command_t;
+
+inline i2c_state_t ssd1306_start(ssd1306_addr_t addr, ssd1306_control_t ctrl) {
+	i2c_state_t state;
+
+	i2c_start();
+
+	state = i2c_read_state_wait();
+	if (state != I2C_MASTER_START) {
+		return state;
+	}
+
+	i2c_slaW(addr << 1);
+
+	return i2c_read_state_wait();
+}
+
+inline i2c_state_t ssd1306_send(uint8_t value) {
+	i2c_write(value);
+	return i2c_read_state_wait();
+}
+
+inline i2c_state_t ssd1306_send_command(ssd1306_command_t cmd) {
+	i2c_state_t state;
+
+	state = ssd1306_send(CTRL_COMMAND);
+	if (state != I2C_MASTER_TXDATA_ACK) {
+		return state;
+	}
+	return ssd1306_send(cmd);
+}
+
+inline i2c_state_t ssd1306_stop() {
+	i2c_stop();
+	return i2c_read_state_wait();
+}
 
 #endif // SSD1306_H
