@@ -24,7 +24,7 @@ typedef enum {
 	SSD1306_CHARGE_PUMP = 0x8D,
 	SSD1306_PRECHARGE_PERIOD = 0xD9,
 	SSD1306_DISPLAY_RAM = 0xA4,
-	SSD1306_DISPLAY_FILL = 0xA5,
+	SSD1306_DISPLAY_ENTIRE_ON = 0xA5,
 	SSD1306_DISPLAY_NORMAL = 0xA6,
 	SSD1306_DISPLAY_INVERSE = 0xA7,
 	SSD1306_DISPLAY_CONTRAST = 0x81,
@@ -54,6 +54,16 @@ typedef enum {
 	ALTERNATIVE_REMAP_COM_LR = 0x32,
 } com_cfg_t;
 
+typedef enum {
+	ENTIRE_DISPLAY_ON = SSD1306_DISPLAY_ENTIRE_ON,
+	DISPLAY_RAM = SSD1306_DISPLAY_RAM,
+} display_mode_t;
+
+typedef enum {
+	DISPLAY_NORMAL = SSD1306_DISPLAY_NORMAL,
+	DISPLAY_INVERSE = SSD1306_DISPLAY_INVERSE,
+} display_inverse_mode_t;
+
 typedef struct {
 	uint8_t* display_clock;
 	uint8_t* multiplex_ratio;
@@ -66,6 +76,8 @@ typedef struct {
 	segment_remap_t segment_remap;
 	com_remap_t com_remap;
 	com_cfg_t com_config;
+	display_mode_t display_mode;
+	display_inverse_mode_t inverse_mode;
 } ssd1306_config_t;
 
 extern i2c_state_t ssd1306_configure(ssd1306_addr_t addr, const ssd1306_config_t* cfg);
