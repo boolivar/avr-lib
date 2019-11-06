@@ -100,6 +100,17 @@ inline i2c_state_t i2c_read_state_immediate(void)
 	return (TWSR & 0xF8);
 }
 
+inline bool i2c_is_stopping(void)
+{
+	return (TWCR & (1<<TWSTO));
+}
+
+inline void i2c_wait_stop(void)
+{
+	while (i2c_is_stopping())
+		;
+}
+
 inline i2c_state_t i2c_read_state_wait(void)
 {
 	i2c_wait();
