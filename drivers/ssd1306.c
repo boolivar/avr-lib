@@ -107,6 +107,13 @@ i2c_state_t ssd1306_configure(ssd1306_addr_t addr, const ssd1306_config_t* cfg) 
 				break;
 			}
 		}
+
+		if (cfg->addressing_mode != 0) {
+			state = ssd1306_send_command2(SSD1306_MEMORY_ADDRESSING_MODE, cfg->addressing_mode - 1);
+			if (state != I2C_MASTER_TXDATA_ACK) {
+				break;
+			}
+		}
 	} while (0);
 
 	ssd1306_stop();

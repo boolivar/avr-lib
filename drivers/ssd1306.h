@@ -30,6 +30,9 @@ typedef enum {
 	SSD1306_DISPLAY_CONTRAST = 0x81,
 	SSD1306_VCOMH_DESELECT_LEVEL = 0xDB,
 	SSD1306_COM_CONFIG = 0xDA,
+	SSD1306_MEMORY_ADDRESSING_MODE = 0x20,
+	SSD1306_COLUMN_ADDRESS = 0x21,
+	SSD1306_PAGE_ADDRESS = 0x22,
 } ssd1306_command_t;
 
 typedef enum {
@@ -64,6 +67,12 @@ typedef enum {
 	DISPLAY_INVERSE = SSD1306_DISPLAY_INVERSE,
 } display_inverse_mode_t;
 
+typedef enum {
+	HORIZONTAL_ADDRESSING = 1,
+	VERTICAL_ADDRESSING,
+	PAGE_ADDRESSING,
+} addressing_mode_t;
+
 typedef struct {
 	uint8_t* display_clock;
 	uint8_t* multiplex_ratio;
@@ -78,6 +87,7 @@ typedef struct {
 	com_cfg_t com_config;
 	display_mode_t display_mode;
 	display_inverse_mode_t inverse_mode;
+	addressing_mode_t addressing_mode;
 } ssd1306_config_t;
 
 extern i2c_state_t ssd1306_configure(ssd1306_addr_t addr, const ssd1306_config_t* cfg);
