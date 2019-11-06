@@ -9,7 +9,7 @@ typedef enum {
 } ssd1306_addr_t;
 
 typedef enum {
-	CTRL_DATA_STREAM = 0,
+	CTRL_DATA_STREAM = 0x40,
 	CTRL_COMMAND = 0x80,
 	CTRL_DATA = 0xC0,
 } ssd1306_control_t;
