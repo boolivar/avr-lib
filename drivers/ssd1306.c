@@ -152,4 +152,5 @@ i2c_state_t ssd1306_send(uint8_t value) {
 
 void ssd1306_stop() {
 	i2c_stop();
+	i2c_wait_stop();
 }
