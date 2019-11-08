@@ -1,14 +1,7 @@
-//==============================================================================
-// Description: Работа с таймерами ATMega128
-//              
-// Author: pogorelov 
-// Revision:  
-// Date: 
-//==============================================================================
-
-
 #ifndef _TIMER128_H_
 #define _TIMER128_H_
+
+#include <stdint.h>
 
 typedef enum
 {
@@ -124,24 +117,24 @@ typedef enum
 	TIMER2_ALL_INTERRUPTS
 } timer2_int_enum;
 
-void set_timer0_wg_mode(timer0_wg_mode_enum wgm);
-void set_timer0_clock_source(timer0_clock_select_enum clock_select);
-void set_timer0_OC1A_mode(timer0_compare_output_mode_enum mode);
-void set_timer0_OC1B_mode(timer0_compare_output_mode_enum mode);
-void timer0_int_ena(timer0_int_enum timer0_int);
-void timer0_int_dis(timer0_int_enum timer0_int);
-void set_timer0_ctc_freq(uint32_t freq);
+extern void set_timer0_wg_mode(timer0_wg_mode_enum wgm);
+extern void set_timer0_clock_source(timer0_clock_select_enum clock_select);
+extern void set_timer0_OC1A_mode(timer0_compare_output_mode_enum mode);
+extern void set_timer0_OC1B_mode(timer0_compare_output_mode_enum mode);
+extern void timer0_int_ena(timer0_int_enum timer0_int);
+extern void timer0_int_dis(timer0_int_enum timer0_int);
+extern void set_timer0_ctc_freq(uint32_t freq);
 
-void set_timer1_wg_mode(timer1_wg_mode_enum wgm);
-void set_timer1_OC1A_mode(timer1_compare_output_mode_enum mode);
-void set_timer1_OC1B_mode(timer1_compare_output_mode_enum mode);
-void set_timer1_clock_source(timer1_clock_select_enum clock_select);
-void timer1_int_ena(timer1_int_enum timer1_int);
-void timer1_int_dis(timer1_int_enum timer1_int);
+extern void set_timer1_wg_mode(timer1_wg_mode_enum wgm);
+extern void set_timer1_OC1A_mode(timer1_compare_output_mode_enum mode);
+extern void set_timer1_OC1B_mode(timer1_compare_output_mode_enum mode);
+extern void set_timer1_clock_source(timer1_clock_select_enum clock_select);
+extern void timer1_int_ena(timer1_int_enum timer1_int);
+extern void timer1_int_dis(timer1_int_enum timer1_int);
 
-void set_timer2_wg_mode(timer2_wg_mode_enum wgm);
-void set_timer2_clock_source(timer2_clock_select_enum clock_select);
-void timer2_int_ena(timer2_int_enum timer2_int);
-void timer2_int_dis(timer2_int_enum timer2_int);
+extern void set_timer2_wg_mode(timer2_wg_mode_enum wgm);
+extern void set_timer2_clock_source(timer2_clock_select_enum clock_select);
+extern void timer2_int_ena(timer2_int_enum timer2_int);
+extern void timer2_int_dis(timer2_int_enum timer2_int);
 
 #endif

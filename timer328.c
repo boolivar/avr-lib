@@ -1,11 +1,3 @@
-//==============================================================================
-// Description: Работа с таймерами ATMega328
-//              
-// Author: pogorelov 
-// Revision:  
-// Date: 
-//==============================================================================
-
 #include <avr/io.h>
 #include <avr/pgmspace.h>
 #include "timer328.h"
@@ -17,38 +9,6 @@ void set_timer0_wg_mode(timer0_wg_mode_enum wgm)
 
 	TCCR0A |= (wgm & 0x03);
 	TCCR0B |= ((wgm >> 2) << WGM02);
-/*
-	switch (wgm)
-	{
-	case T0_WG_NORMAL:
-		break;
-
-	case T0_WG_PWM_PHASE_CORRECT:
-		TCCR0A |= _BV(WGM00);
-		break;
-
-	case T0_WG_CTC:
-		TCCR0A |= _BV(WGM01);
-		break;
-
-	case T0_WG_FAST_PWM:
-		TCCR0A |= (_BV(WGM00) | _BV(WGM01));
-		break;
-
-	case T0_WG_PWM_PHASE_CORRECT_OCRA:
-		TCCR0B |= _BV(WGM02);
-		TCCR0A |= _BV(WGM00);
-		break;
-
-	case T0_WG_FAST_PWM_OCRA:
-		TCCR0B |= _BV(WGM02);
-		TCCR0A |= _BV(WGM01) | _BV(WGM00);
-		break;
-
-	default:
-		break;
-	} // switch
-*/
 }
 
 void set_timer0_clock_source(timer0_clock_select_enum clock_select)
