@@ -35,6 +35,10 @@ typedef enum {
 	RECEIVER = 0x10,
 } uart_rxtx_enum;
 
+inline uint8_t uart_int_is_enabled(uart_int_enum int_mask) {
+	return UCSR0B & int_mask;
+}
+
 /**
  * use uart_int_enum values for mask
  */
