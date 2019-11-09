@@ -9,13 +9,8 @@ static int uart_putchar(char c, FILE *stream);
 
 FILE uart_str = FDEV_SETUP_STREAM(uart_putchar, NULL, _FDEV_SETUP_WRITE);
 
-void init_dbg_uart(void)
-{
-	UCSR0A |= _BV(U2X0);
-	UBRR0L = (F_CPU / (8UL * UART_BAUD)) - 1;
-
-	UCSR0B = _BV(TXEN0);
-
+void init_dbg_uart(void) {
+	UCSR0B |= _BV(TXEN0);
 	stdout = &uart_str;
 }
 

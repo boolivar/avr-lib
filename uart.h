@@ -3,8 +3,6 @@
 
 #include <avr/io.h>
 
-#define UART_BAUD 57600
-
 typedef enum {
 	PARITY_DISABLE = 0,
 	PARITY_EVEN = 2,
