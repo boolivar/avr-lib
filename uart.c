@@ -16,7 +16,7 @@ void init_dbg_uart(void) {
 
 void uart_set_baudrate(unsigned long baudrate) {
 	UCSR0A |= _BV(U2X0);
-	UBRR0L = (F_CPU / (8UL * baudrate)) - 1;
+	UBRR0 = (F_CPU / (8UL * baudrate)) - 1;
 }
 
 void uart_set_mode(parity_mode_enum parity, stop_bits_enum stop, char_size_enum char_size) {
