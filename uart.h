@@ -23,9 +23,9 @@ typedef enum {
 } char_size_enum;
 
 typedef enum {
-	UDR_EMPTY_INT = 0x80,
-	TX_COMPLETE_INT = 0x40,
-	RX_COMPLETE_INT = 0x20
+	UDR_EMPTY_INT = _BV(UDRIE0),
+	TX_COMPLETE_INT = _BV(TXCIE0),
+	RX_COMPLETE_INT = _BV(RXCIE0),
 } uart_int_enum;
 
 typedef enum {
